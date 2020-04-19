@@ -58,12 +58,6 @@ def train(train_data, model=None, new_model_name='new_model', output_dir=None, n
                            losses=losses)
             print('Losses', losses)
 
-    # Test the trained model
-    test_text = 'Gianni Infantino is the president of FIFA.'
-    doc = nlp(test_text)
-    print("Entities in '%s'" % test_text)
-    for ent in doc.ents:
-        print(ent.label_, ent.text)
 
     # Save model
     if output_dir is not None:
@@ -93,8 +87,8 @@ def expand_loc_entities(doc):
 
 def inference(output_dir,inference_data):
     print("Loading from", output_dir)
-    nlp2 = spacy.load('en_core_web_lg')
-    # nlp2 = spacy.load(output_dir)
+    #nlp2 = spacy.load('en_core_web_lg')
+    nlp2 = spacy.load(output_dir)
     ruler = EntityRuler(nlp2)
     patterns = [{"label": "family-friendly", "pattern": "family - friendly"}]
     ruler.add_patterns(patterns)
@@ -128,7 +122,7 @@ def get_train_data(train_file=None):
 def main():
     args = parse_argument()
     output_dir = Path(args.output)
-    train_data = get_train_data()
+    train_data = get_train_data(args.train)
     train(train_data, args.spacy_model, args.model, output_dir, args.iter)
     inference_data = get_inference_data(args.test)
     inference(output_dir, inference_data)
